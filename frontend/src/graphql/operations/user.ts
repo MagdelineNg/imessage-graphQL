@@ -1,10 +1,11 @@
 import { gql } from "@apollo/client";
 
-const UserOperations = {
+// eslint-disable-next-line import/no-anonymous-default-export
+export default {
   Queries: {},
   Mutations: {
     createUsername: gql`
-      mutation createUsername($username: String!) {
+      mutation CreateUsername($username: String!) {  #! bang operator
         #only graphql knows username is String type
         createUsername(username: $username) {
           success
@@ -16,4 +17,4 @@ const UserOperations = {
   Subscriptions: {},
 };
 
-export default UserOperations;
+

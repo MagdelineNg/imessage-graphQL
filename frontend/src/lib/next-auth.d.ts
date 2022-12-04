@@ -1,7 +1,7 @@
 import "next-auth";
 
 declare module "next-auth" {
-  interface Session {
+  interface Session {  //combined with actual next-auth lib interface 
     user: User;
   }
 

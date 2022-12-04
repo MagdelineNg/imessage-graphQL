@@ -9,7 +9,11 @@ const Home: NextPage = () => {
 
   console.log("session: ", session);
 
-  const reloadSession = () => {}
+  const reloadSession = () => {
+    //automatically reload and fetch user after user updates u/n
+    const event = new Event("visibilitychange")
+    document.dispatchEvent(event)
+  }
 
   return (
     <Box>

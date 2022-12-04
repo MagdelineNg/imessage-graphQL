@@ -17,12 +17,10 @@ const Auth: React.FunctionComponent<IAuthProps> = ({
 }) => {
   const [username, setUsername] = useState("");
 
-  const [createUsername, { data, loading, error }] = useMutation<
+  const [createUsername, { loading, error }] = useMutation<
     CreateUsernameData,
     CreateUsernameVariables
   >(UserOperations.Mutations.createUsername);
-
-  console.log("save", data, loading, error);
 
   //graphQL mutation used for CRUD
   const onSubmit = async () => {
@@ -30,8 +28,22 @@ const Auth: React.FunctionComponent<IAuthProps> = ({
 
     try {
       // createUsername mutation to send username to GraphQL api
-      //graphQL types != TS types(dev tool that does not exist in prodn)
-      await createUsername({ variables: { username } });
+      //graphQL types != TS types(compile-time lang/dev tool that does not exist in prodn)
+      const { data } = await createUsername({ variables: { username } });
+
+      if (!data?.createUsername) {
+        throw new Error();
+      }
+
+      if (data.createUsername.error) {
+        const {
+          createUsername: { error },
+        } = data;
+
+        throw new Error(error);
+      }
+
+      reloadSession();
     } catch (error) {
       console.log("onSubmit error", error);
     }

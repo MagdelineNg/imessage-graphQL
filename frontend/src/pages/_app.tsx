@@ -4,7 +4,7 @@ import { NextPageContext } from "next";
 import { getSession, SessionProvider } from "next-auth/react";
 import type { AppProps } from "next/app";
 import { theme } from "../chakra/theme";
-import { client } from "../graphQL/apollo-client";
+import { client } from "../graphql/apollo-client";
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   return (

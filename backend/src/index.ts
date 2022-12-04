@@ -1,3 +1,6 @@
+import { PrismaClient } from '@prisma/client';
+import { GraphQLContext, Session } from './util/types';
+import { getSession } from 'next-auth/react';
 import { ApolloServer } from "apollo-server-express";
 import {
   ApolloServerPluginDrainHttpServer,
@@ -23,13 +26,27 @@ async function main() {
 
   const corsOptions = {
     origin: process.env.CLIENT_ORIGIN,
-    credentials: true,
+    credentials: true, //to allow server to accept next-auth auth headers
   };
+
+  /*
+  Context parameters
+  */
+
+  const prisma = new PrismaClient()
+  //const pubsub
+
+  console.log("process client", process.env.CLIENT_ORIGIN)
 
   const server = new ApolloServer({
     schema,
     csrfPrevention: true,
     cache: "bounded",
+    context: async ({req, res}): Promise<GraphQLContext>=> {
+      const session = await getSession({req}) as Session
+      
+      return { session, prisma }   //user session, prisma client(to com w DB) needed across all resolvers
+    },
     plugins: [
       ApolloServerPluginDrainHttpServer({ httpServer }),
       ApolloServerPluginLandingPageLocalDefault({ embed: true }),
